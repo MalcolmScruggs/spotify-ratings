@@ -69,7 +69,7 @@ config :phoenix, :plug_init_mode, :runtime
 # Configure your database
 config :spotifyrating, Spotifyrating.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "password",
   database: "spotifyrating_dev",
   hostname: "localhost",
   pool_size: 10

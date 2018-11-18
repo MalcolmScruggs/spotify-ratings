@@ -17,8 +17,18 @@ defmodule SpotifyratingWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/album", AlbumController, :index
+    get "/profile", ProfileController, :index
+
     get "/authorize", AuthorizationController, :authorize
-    get "/authenticate", AuthenticationController, authenticate
+    get "/authenticate", AuthenticationController, :authenticate
+  end
+
+
+  scope "/api/v1", SpotifyratingWeb do
+    pipe_through :api
+
+    resources "/song_ratings", SongRatingController
   end
 
   # Other scopes may use custom stacks.

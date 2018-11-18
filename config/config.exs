@@ -30,4 +30,4 @@ config :ecto, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
 import_config "spotify.exs"
-import_config "spotify_secrets.exs"
+import_config "spotify.secret.exs"

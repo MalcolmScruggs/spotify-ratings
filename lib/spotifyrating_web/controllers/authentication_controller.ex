@@ -6,7 +6,8 @@ defmodule SpotifyratingWeb.AuthenticationController do
       {:ok, conn } ->
         IO.inspect(conn)
         #TODO redirect
-        redirect conn, to: "/"
+        redirect conn, to: "/profile"
+#        { conn, profile_path(conn, :index)}
       {:error, _reason, conn} -> redirect conn, to: "/error"
     end
   end

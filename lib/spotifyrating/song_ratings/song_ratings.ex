@@ -45,7 +45,7 @@ defmodule Spotifyrating.SongRatings do
   def get_song_rating!(id), do: Repo.get!(SongRating, id)
 
   @doc """
-  Creates a song_rating.
+  Creates a song_rating, or updates if there is an existing one
 
   ## Examples
 
@@ -59,7 +59,9 @@ defmodule Spotifyrating.SongRatings do
   def create_song_rating(attrs \\ %{}) do
     %SongRating{}
     |> SongRating.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert(
+      on_conflict: :replace_all,
+      conflict_target: [:user_id, :song_id])
   end
 
   @doc """

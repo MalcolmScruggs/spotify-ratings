@@ -1,4 +1,10 @@
 /* This file is for your main application css. */
+$body-bg: #191414;
+$body-color: #FFFFFF;
 
+$theme-colors: (
+        "primary": #1DB954,
+        "danger": #ff4136
+);
 @import "~bootstrap/scss/bootstrap";
 

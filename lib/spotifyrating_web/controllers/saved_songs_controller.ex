@@ -6,10 +6,11 @@ defmodule SpotifyratingWeb.SavedSongsController do
 
   action_fallback SpotifyratingWeb.FallbackController
 
-  def index(conn, _params) do
-    {:ok, saved_tracks } = Spotify.Library.get_saved_tracks(conn, limit: 50)
+  def index(conn, %{"offset" => offset}) do
+    {:ok, saved_tracks } = Spotify.Library.get_saved_tracks(conn, limit: 5, offset: offset)
     if Map.has_key?(saved_tracks, "error") do
-      redirect conn, to: "/authorize"
+#      redirect conn, to: "/authorize"
+#      send_resp(conn, :error, "")
     else
       saved_tracks = saved_tracks.items
                      |> Enum.map(fn track ->

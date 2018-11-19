@@ -3,7 +3,7 @@ defmodule SpotifyratingWeb.SavedSongsView do
 #  alias SpotifyratingWeb.SavedSongsView
 
   def render("index.json", %{saved_songs: saved_songs, user_id: user_id}) do
-    %{songs: render_many(saved_songs, SpotifyratingWeb.SavedSongsView, "saved_song.json"), user_id: user_id}
+    %{data: render_many(saved_songs, SpotifyratingWeb.SavedSongsView, "saved_song.json"), user_id: user_id}
   end
 
   def render("show.json", %{saved_song: saved_song}) do

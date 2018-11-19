@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Spotify Ratings</title>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <script>
+        window.userToken = "<%= @user_token %>";
+    </script>
   </head>
   <body>
     <header>
@@ -13,6 +16,7 @@
         <nav role="navigation">
           <ul>
             <li>Spotify Ratings</li>
+            <li><a href="/authorize">Authorize</a></li>
           </ul>
         </nav>
       </section>

@@ -6,24 +6,31 @@ import { Provider } from 'react-redux';
 
 import SavedTracks from './components/saved_tracks'
 
-export default function root_init(node, store) {
+export default function root_init(node, store, socket) {
     ReactDOM.render(
         <Provider store={store}>
-            <Root tasks={null} />
+            <Root socket={socket} />
         </Provider>, node);
 }
 
 class Root extends React.Component {
     constructor(props) {
         super(props);
+
+        this.socket = props.socket;
     }
 
     render() {
         return <div>
             <Router>
-                <Route path="/" exact={true} render={() =>
-                    <SavedTracks />
-                } />
+                <div>
+                    <Route path="/" exact={true} render={() =>
+                        <SavedTracks socket={this.socket} />
+                    } />
+                    <Route path="test" exact={true} render={ () =>
+                        <SavedTracks socket={this.socket} />
+                    } />
+                </div>
             </Router>
         </div>;
     }

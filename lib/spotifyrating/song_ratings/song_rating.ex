@@ -18,4 +18,6 @@ defmodule Spotifyrating.SongRatings.SongRating do
     |> validate_required([:user_id, :song_id, :stars])
     |> unique_constraint(:user_id, name: :song_ratings_user_id_song_id_index)
   end
+
+#  TODO enforce constrainsts on stars values both here and migration
 end

@@ -28,7 +28,8 @@ defmodule SpotifyratingWeb.Router do
   scope "/api/v1", SpotifyratingWeb do
     pipe_through :api
 
-    resources "/song_ratings", SongRatingController
+    resources "/song_ratings", SongRatingController, except: [:new, :edit]
+    resources "/saved_songs", SavedSongsController, only: [:index]
   end
 
   # Other scopes may use custom stacks.

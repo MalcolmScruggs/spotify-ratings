@@ -1,41 +1,7 @@
-<div class="saved">
-
-  <p>id: <%= @user_id %></p>
-  Saved Tracks
-  <table class="table">
-    <thead>
-      <th>TITLE</th>
-      <th>ARTIST</th>
-      <th>RATING</th>
-      <th>Rate it</th>
-    </thead>
-    <tbody>
-    <%= for track <- @saved_tracks do %>
-      <tr>
-        <td><%= track.name %></td>
-        <td>figure me out bitch</td>
-        <td><%= track.rating %></td>
-        <td><div id="rating-form">
-          <select id=<%= "rating-" <> track.id %>>
-            <option value="1">★</option>
-            <option value="2">★★</option>
-            <option value="3">★★★</option>
-            <option value="4">★★★★</option>
-            <option value="5">★★★★★</option>
-          </select>
-
-          <button
-                  data-user-id="<%= @user_id %>"
-                  data-track-id="<%= track.id %>"
-                  class="btn btn-primary rating-button">Rate</button></div></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-  <!--<ul>-->
-    <!--<%= for track <- @saved_tracks do %>-->
-    <!--<li> <%= track.name %> rating: <%= track.rating %></li>-->
-    <!--<% end %>-->
-  <!--</ul>-->
-
+<div id="root">
+  <div class="row">
+    <div class="col-12">
+      <p>React component loading...</p>
+    </div>
+  </div>
 </div>

@@ -9,19 +9,30 @@ export default class SavedTracks extends React.Component {
 
         this.state = {
             songs: new Map(),
-            user_id: null
+            user_id: null,
+            offset: 0
         };
         this.socket = props.socket;
         this.channels = new Map(); //song_id to channel
     }
 
-
     componentDidMount() {
-        this.fetchSongsAndJoinChannels("/api/v1/saved_songs", 0);
+        this.fetchSongsAndJoinChannels("/api/v1/saved_songs");
     }
 
-    fetchSongsAndJoinChannels(url, offset) {
-        axios.get(url, {params:{offset: 0}})
+    componentWillUnmount() {
+        console.log("unmount");
+        this.channels.forEach((channel) => {
+            channel.leave(); //leave any previously joined channels
+        });
+    }
+
+    fetchSongsAndJoinChannels(url) {
+        this.channels.forEach((channel) => {
+            channel.leave(); //leave any previously joined channels
+        });
+        this.channels = new Map();
+        axios.get(url, {params:{offset: this.state.offset * 50}})
             .then((resp) => {
                 let data = resp.data;
                 let songs = data.data;
@@ -30,7 +41,7 @@ export default class SavedTracks extends React.Component {
                     let channel = this.socket.channel("song:" + song.id);
                     channel.join()
                         .receive("ok", resp => {
-                            console.log("Joined successfully", resp)
+                            //console.log("Joined successfully", resp)
                         })
                         .receive("error", resp => { console.log("Unable to join", resp) });
                     channel.on("new:msg", this.gotRating.bind(this));
@@ -64,22 +75,44 @@ export default class SavedTracks extends React.Component {
             .receive("ok", this.gotRating.bind(this));
     }
 
+    nextPage() {
+        this.setState((state) => {
+            return {offset: state.offset + 1}
+        }, () => this.fetchSongsAndJoinChannels("/api/v1/saved_songs"));
+    }
+
+    prevPage() {
+        this.setState((state) => {
+            return {offset: state.offset - 1}
+        }, () => this.fetchSongsAndJoinChannels("/api/v1/saved_songs"));
+    }
+
     render() {
         let songs = [];
         this.state.songs.forEach((song, id) => {
             songs.push(<Song song={song} key={id} root={this} />)
         });
-        return <table className="table table-sm">
-            <thead><tr>
-                <th className="text-uppercase">Title</th>
-                <th className="text-uppercase">Artist</th>
-                <th className="text-uppercase">Album</th>
-                <th className="text-uppercase" style={{minWidth: "90px"}}>Rating</th>
-            </tr></thead>
-            <tbody>
-                {songs}
-            </tbody>
-        </table>;
+        let prev = null;
+        if (this.state.offset > 0) {
+            prev = <div className="btn btn-primary mr-3" onClick={() => {this.prevPage()}}>prev</div>;
+        }
+        return <div>
+            <table className="table table-sm">
+                <thead><tr>
+                    <th className="text-uppercase">Title</th>
+                    <th className="text-uppercase">Artist</th>
+                    <th className="text-uppercase">Album</th>
+                    <th className="text-uppercase" style={{minWidth: "90px"}}>Rating</th>
+                </tr></thead>
+                <tbody>
+                    {songs}
+                </tbody>
+            </table>
+            <div>
+                {prev}
+                <div className="btn btn-primary" onClick={() => {this.nextPage()}}>next</div>
+            </div>
+            </div>
     }
 }
 
@@ -97,7 +130,8 @@ function Song(props) {
                 starCount={5}
                 value={rating}
                 onStarClick={root.onStarClick.bind(root)}
-                starColor="#1DB954"/>
+                starColor="#1DB954"
+        />
         </td>
     </tr>
 }

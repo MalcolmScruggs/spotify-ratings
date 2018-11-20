@@ -28,6 +28,14 @@ defmodule Spotifyrating.SongRatings do
     Repo.aggregate(query, :avg, :stars)
   end
 
+  def get_ratings_by_user_id(user_id, limit) do
+    query = from sr in SongRating,
+      where: sr.user_id == ^user_id,
+      order_by: [desc: sr.stars],
+      limit: ^limit
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single song_rating.
 

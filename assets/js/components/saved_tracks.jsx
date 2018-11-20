@@ -14,10 +14,11 @@ export default class SavedTracks extends React.Component {
         };
         this.socket = props.socket;
         this.channels = new Map(); //song_id to channel
+        this.api_url = props.api_url;
     }
 
     componentDidMount() {
-        this.fetchSongsAndJoinChannels("/api/v1/saved_songs");
+        this.fetchSongsAndJoinChannels();
     }
 
     componentWillUnmount() {
@@ -27,12 +28,12 @@ export default class SavedTracks extends React.Component {
         });
     }
 
-    fetchSongsAndJoinChannels(url) {
+    fetchSongsAndJoinChannels() {
         this.channels.forEach((channel) => {
             channel.leave(); //leave any previously joined channels
         });
         this.channels = new Map();
-        axios.get(url, {params:{offset: this.state.offset * 50}})
+        axios.get(this.api_url, {params:{offset: this.state.offset * 50}})
             .then((resp) => {
                 let data = resp.data;
                 let songs = data.data;
@@ -78,13 +79,13 @@ export default class SavedTracks extends React.Component {
     nextPage() {
         this.setState((state) => {
             return {offset: state.offset + 1}
-        }, () => this.fetchSongsAndJoinChannels("/api/v1/saved_songs"));
+        }, () => this.fetchSongsAndJoinChannels());
     }
 
     prevPage() {
         this.setState((state) => {
             return {offset: state.offset - 1}
-        }, () => this.fetchSongsAndJoinChannels("/api/v1/saved_songs"));
+        }, () => this.fetchSongsAndJoinChannels());
     }
 
     render() {
@@ -94,10 +95,16 @@ export default class SavedTracks extends React.Component {
         });
         let prev = null;
         if (this.state.offset > 0) {
-            prev = <div className="btn btn-primary mr-3" onClick={() => {this.prevPage()}}>prev</div>;
+            prev = <div className="btn btn-primary mr-3 mb-3" onClick={() => {this.prevPage()}}>prev</div>;
         }
         return <div>
             <table className="table table-sm">
+                <colgroup>
+                    <col style={{width: "50%"}}/>
+                    <col style={{width: "30%"}} />
+                    <col style={{width: "20%"}} />
+                    <col style={{width: "0%"}} />
+                </colgroup>
                 <thead><tr>
                     <th className="text-uppercase">Title</th>
                     <th className="text-uppercase">Artist</th>
@@ -110,7 +117,7 @@ export default class SavedTracks extends React.Component {
             </table>
             <div>
                 {prev}
-                <div className="btn btn-primary" onClick={() => {this.nextPage()}}>next</div>
+                <div className="btn btn-primary mb-3" onClick={() => {this.nextPage()}}>next</div>
             </div>
             </div>
     }
@@ -122,9 +129,9 @@ function Song(props) {
     let rating = Math.round(song.rating);
     //TODO distinguish between global averages and personal ratings (toggle?)
     return <tr>
-        <td>{name}</td>
-        <td>{artists}</td>
-        <td>{album}</td>
+        <td className="text-truncate" style={{maxWidth: "1px"}}>{name}</td>
+        <td className="text-truncate" style={{maxWidth: "1px"}}>{artists}</td>
+        <td className="text-truncate" style={{maxWidth: "1px"}}>{album}</td>
         <td><StarRatingComponent
                 name={id}
                 starCount={5}

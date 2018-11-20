@@ -18,6 +18,8 @@ defmodule SpotifyratingWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/my_song_ratings", PageController, :index
+
     get "/album", AlbumController, :index
     get "/profile", ProfileController, :index
 
@@ -31,10 +33,6 @@ defmodule SpotifyratingWeb.Router do
 
     resources "/song_ratings", SongRatingController, except: [:new, :edit]
     resources "/saved_songs", SavedSongsController, only: [:index]
+    resources "/my_song_ratings", MySongRatingController, only: [:index]
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", SpotifyratingWeb do
-  #   pipe_through :api
-  # end
 end

@@ -23,12 +23,12 @@ class Root extends React.Component {
     render() {
         return <div>
             <Router>
-                <div>
+                <div className="container">
                     <Route path="/" exact={true} render={() =>
-                        <SavedTracks socket={this.socket} />
+                        <SavedTracks socket={this.socket} api_url="/api/v1/saved_songs" />
                     } />
-                    <Route path="test" exact={true} render={ () =>
-                        <SavedTracks socket={this.socket} />
+                    <Route path="/my_song_ratings" exact={true} render={ () =>
+                        <SavedTracks socket={this.socket} api_url="/api/v1/my_song_ratings" />
                     } />
                 </div>
             </Router>

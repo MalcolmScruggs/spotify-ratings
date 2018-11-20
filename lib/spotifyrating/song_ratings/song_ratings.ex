@@ -37,6 +37,16 @@ defmodule Spotifyrating.SongRatings do
     Repo.all(query)
   end
 
+  def get_top_ratings(limit, offset) do
+    query = from sr in SongRating,
+      group_by: :song_id,
+      select: %{song_id: sr.song_id, stars: avg(sr.stars)},
+      order_by: [desc: 2], #second col (b/c group_by)
+      limit: ^limit,
+      offset: ^offset
+    Repo.all(query)
+  end
+
   @doc """
   Gets a single song_rating.
 

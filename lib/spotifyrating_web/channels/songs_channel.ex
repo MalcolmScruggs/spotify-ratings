@@ -13,6 +13,7 @@ defmodule SpotifyratingWeb.SongsChannel do
   end
 
   def handle_in("rate", %{"song_rating" => song_rating_params}, socket) do
+    IO.inspect(song_rating_params)
     with {:ok, %SongRating{} = song_rating} <- SongRatings.create_song_rating(song_rating_params) do
       rating = SongRatings.get_average_by_song_id(song_rating.song_id)
       broadcast_from! socket, "new:msg", %{"song_id" => song_rating.song_id, "rating" => rating, "user_rating" => song_rating.stars}

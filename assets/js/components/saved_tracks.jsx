@@ -10,7 +10,8 @@ export default class SavedTracks extends React.Component {
         this.state = {
             songs: new Map(),
             user_id: null,
-            offset: 0
+            offset: 0,
+            max_load:  false
         };
         this.socket = props.socket;
         this.channels = new Map(); //song_id to channel
@@ -29,15 +30,17 @@ export default class SavedTracks extends React.Component {
     }
 
     fetchSongsAndJoinChannels() {
-        this.channels.forEach((channel) => {
-            channel.leave(); //leave any previously joined channels
-        });
-        this.channels = new Map();
-        axios.get(this.api_url, {params:{offset: this.state.offset * 50}})
+        axios.get(this.api_url,
+                  {params:{offset: this.state.offset * 50},
+                  validateStatus: function (status) {
+                          return status >= 200 && status < 300 && status !== 204; // default
+                      },})
             .then((resp) => {
+                this.channels = new Map();
+
                 let data = resp.data;
                 let songs = data.data;
-                let songsMap = new Map();
+                let songsMap = this.state.songs;
                 songs.forEach((song) => {
                     let channel = this.socket.channel("song:" + song.id);
                     channel.join()
@@ -49,9 +52,14 @@ export default class SavedTracks extends React.Component {
                     this.channels.set(song.id, channel);
                     songsMap.set(song.id, song);
                 });
+                console.log(data);
                 this.setState({songs: songsMap, user_id: data.user_id});})
             .catch((error) => {
                 console.log(error);
+                if (error.response.status === 204) {
+                    this.setState({max_load: true});
+                }
+                console.log(error.response.status);
             });
     };
 
@@ -77,14 +85,11 @@ export default class SavedTracks extends React.Component {
     }
 
     nextPage() {
+        if (this.state.max_load) {
+            return;
+        }
         this.setState((state) => {
             return {offset: state.offset + 1}
-        }, () => this.fetchSongsAndJoinChannels());
-    }
-
-    prevPage() {
-        this.setState((state) => {
-            return {offset: state.offset - 1}
         }, () => this.fetchSongsAndJoinChannels());
     }
 
@@ -93,9 +98,9 @@ export default class SavedTracks extends React.Component {
         this.state.songs.forEach((song, id) => {
             songs.push(<Song song={song} key={id} root={this} />)
         });
-        let prev = null;
-        if (this.state.offset > 0) {
-            prev = <div className="btn btn-primary mr-3 mb-3" onClick={() => {this.prevPage()}}>prev</div>;
+        let more = null;
+        if (!this.state.max_load) {
+            more = <div className="btn btn-primary mb-3" onClick={() => {this.nextPage()}}>more</div>;
         }
         return <div>
             <table className="table table-sm">
@@ -116,8 +121,7 @@ export default class SavedTracks extends React.Component {
                 </tbody>
             </table>
             <div>
-                {prev}
-                <div className="btn btn-primary mb-3" onClick={() => {this.nextPage()}}>next</div>
+                {more}
             </div>
             </div>
     }
@@ -127,8 +131,6 @@ function Song(props) {
     let {song, root} = props;
     let {album, artists, id, name} = song;
     let rating = Math.round(song.rating);
-    //TODO distinguish between global averages and personal ratings (toggle?)
-    //TODO delete ratings by clicking on star value?
     return <tr>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{name}</td>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{artists}</td>

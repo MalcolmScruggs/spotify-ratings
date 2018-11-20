@@ -19,6 +19,7 @@ defmodule SpotifyratingWeb.Router do
 
     get "/", PageController, :index
     get "/my_song_ratings", PageController, :index
+    get "/top_rated", PageController, :index
 
     get "/album", AlbumController, :index
     get "/profile", ProfileController, :index
@@ -36,5 +37,6 @@ defmodule SpotifyratingWeb.Router do
     resources "/song_ratings", SongRatingController, except: [:new, :edit]
     get "/song/my_saved", SongController, :my_saved
     get "/song/my_ratings", SongController, :my_song_ratings
+    get "/song/top_rated", SongController, :top_rated
   end
 end

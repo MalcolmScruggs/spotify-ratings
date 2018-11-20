@@ -19,4 +19,11 @@ defmodule SpotifyratingWeb.FallbackController do
     |> put_view(SpotifyratingWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :no_content}) do
+    conn
+    |> put_status(:no_content)
+    |> put_view(SpotifyratingWeb.ErrorView)
+    |> render(:"204")
+  end
 end

@@ -21,19 +21,36 @@ defmodule SpotifyratingWeb.SongController do
   def my_song_ratings(conn, %{"offset" => offset}) do
     {:ok, user} = Spotify.Profile.me(conn)
     ratings = SongRatings.get_ratings_by_user_id(user.id, 50, offset)
-              |> Map.new(fn x -> {x.song_id, x.stars} end)
+    songs = fetch_and_sort_songs(conn, ratings)
+    render(conn, "index.json", songs: songs, user_id: user.id)
+  end
+
+  def top_rated(conn, %{"offset" => offset}) do
+    {:ok, user} = Spotify.Profile.me(conn)
+    ratings = SongRatings.get_top_ratings(50, offset)
+    if (!Enum.empty?(ratings)) do
+      songs = fetch_and_sort_songs(conn, ratings)
+      render(conn, "index.json", songs: songs, user_id: user.id)
+    else
+      IO.inspect("please lord")
+      SpotifyratingWeb.FallbackController.call(conn, {:error, :no_content})
+    end
+  end
+
+  defp fetch_and_sort_songs(conn, ratings) do
+    ratings = Map.new(ratings, fn x -> {x.song_id, x.stars} end)
 
     ids = Map.keys(ratings)
           |> Enum.join(",")
 
-    {:ok, songs} = Spotify.Track.get_tracks(conn, ids: ids)
-    songs = Enum.map(songs, fn track ->
-      Map.put(track, :rating, Map.get(ratings, track.id, nil))
-    end)
-    songs = Enum.sort_by(songs, fn x -> -x.rating end)
-    render(conn, "index.json", songs: songs, user_id: user.id)
+    if ids != "" do
+      {:ok, songs} = Spotify.Track.get_tracks(conn, ids: ids)
+      songs = Enum.map(songs, fn track ->
+        Map.put(track, :rating, Map.get(ratings, track.id, nil))
+      end)
+      Enum.sort_by(songs, fn x -> x.rating end)
+      |> Enum.reverse #how to handle inverting sort_by clause
+    end
   end
-
-
 
 end

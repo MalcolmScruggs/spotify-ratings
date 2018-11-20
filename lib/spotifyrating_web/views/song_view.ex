@@ -1,12 +1,12 @@
 defmodule SpotifyratingWeb.SongView do
   use SpotifyratingWeb, :view
 
-  def render("index.json", %{songs: songs, user_id: user_id}) do
-    %{data: render_many(songs, SpotifyratingWeb.SongView, "song.json"), user_id: user_id}
+  def render("index.json", %{songs: songs}) do
+    %{data: render_many(songs, SpotifyratingWeb.SongView, "song.json")}
   end
 
-  def render("show.json", %{song: song, user_id: user_id}) do
-    %{data: render_one(song, SpotifyratingWeb.SongView, "song.json"), user_id: user_id}
+  def render("show.json", %{song: song}) do
+    %{data: render_one(song, SpotifyratingWeb.SongView, "song.json")}
   end
 
   def render("song.json", %{song: song}) do

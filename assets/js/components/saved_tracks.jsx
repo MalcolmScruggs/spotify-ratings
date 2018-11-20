@@ -9,13 +9,14 @@ export default class SavedTracks extends React.Component {
 
         this.state = {
             songs: new Map(),
-            user_id: null,
+            user_id: props.user_id,
             offset: 0,
             max_load:  false
         };
         this.socket = props.socket;
         this.channels = new Map(); //song_id to channel
         this.api_url = props.api_url;
+        this.title = props.title;
     }
 
     componentDidMount() {
@@ -23,7 +24,6 @@ export default class SavedTracks extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log("unmount");
         this.channels.forEach((channel) => {
             channel.leave(); //leave any previously joined channels
         });
@@ -52,9 +52,8 @@ export default class SavedTracks extends React.Component {
                     this.channels.set(song.id, channel);
                     songsMap.set(song.id, song);
                 });
-                console.log(data);
-                this.setState({songs: songsMap, user_id: data.user_id});})
-            .catch((error) => {
+                this.setState({songs: songsMap});
+            }).catch((error) => {
                 console.log(error);
                 if (error.response.status === 204) {
                     this.setState({max_load: true});
@@ -103,6 +102,7 @@ export default class SavedTracks extends React.Component {
             more = <div className="btn btn-primary mb-3" onClick={() => {this.nextPage()}}>more</div>;
         }
         return <div>
+            <div className="mb-4"><h2>{this.title}</h2></div>
             <table className="table table-sm">
                 <colgroup>
                     <col style={{width: "50%"}}/>
@@ -130,18 +130,24 @@ export default class SavedTracks extends React.Component {
 function Song(props) {
     let {song, root} = props;
     let {album, artists, id, name} = song;
-    let rating = Math.round(song.rating);
+    let rating = round(song.rating, 4);
     return <tr>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{name}</td>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{artists}</td>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{album}</td>
-        <td><StarRatingComponent
+        <td data-toggle="tooltip" data-placement="top" title={rating || "unrated"}>
+            <StarRatingComponent
                 name={id}
                 starCount={5}
                 value={rating}
                 onStarClick={root.onStarClick.bind(root)}
                 starColor="#1DB954"
-        />
+            />
         </td>
     </tr>
+}
+
+//http://www.jacklmoore.com/notes/rounding-in-javascript/
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }

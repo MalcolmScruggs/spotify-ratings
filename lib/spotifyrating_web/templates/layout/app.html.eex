@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script>
         window.userToken = "<%= @user_token %>";
+        window.userId = " <%= @user_id %>";
     </script>
   </head>
   <body>
@@ -18,11 +19,12 @@
             <li>Spotify Ratings</li>
             <li><a href="/authorize">Authorize</a></li>
             <li><a href="/logout">Logout</a></li>
+            <li>Logged in as <%= @user_id %></li>
           </ul>
         </nav>
       </section>
     </header>
-    <main role="main" class="container-fluid">
+    <main role="main">
       <div class="row">
         <div class="col-12">
           <%= if get_flash(@conn, :info) do %>

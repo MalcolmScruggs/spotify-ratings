@@ -8,21 +8,29 @@ defmodule SpotifyratingWeb.SongController do
 
   def my_saved(conn, %{"offset" => offset}) do
     {:ok, saved_tracks } = Spotify.Library.get_saved_tracks(conn, limit: 50, offset: offset)
-    saved_tracks = saved_tracks.items
-                   |> Enum.map(fn track ->
-      Map.put(track, :rating, SongRatings.get_average_by_song_id(track.id))
-    end)
+    if (saved_tracks) do
+      saved_tracks = saved_tracks.items
+                     |> Enum.map(fn track ->
+        Map.put(track, :rating, SongRatings.get_average_by_song_id(track.id))
+      end)
 
-    {:ok, user_id} = Spotify.Profile.me(conn)
-    user_id = user_id.id
-    render(conn, "index.json", songs: saved_tracks, user_id: user_id)
+      {:ok, user_id} = Spotify.Profile.me(conn)
+      user_id = user_id.id
+      render(conn, "index.json", songs: saved_tracks, user_id: user_id)
+    else
+      SpotifyratingWeb.FallbackController.call(conn, {:error, :no_content})
+    end
   end
 
   def my_song_ratings(conn, %{"offset" => offset}) do
     {:ok, user} = Spotify.Profile.me(conn)
     ratings = SongRatings.get_ratings_by_user_id(user.id, 50, offset)
-    songs = fetch_and_sort_songs(conn, ratings)
-    render(conn, "index.json", songs: songs, user_id: user.id)
+    if(!Enum.empty?(ratings)) do
+      songs = fetch_and_sort_songs(conn, ratings)
+      render(conn, "index.json", songs: songs, user_id: user.id)
+    else
+      SpotifyratingWeb.FallbackController.call(conn, {:error, :no_content})
+    end
   end
 
   def top_rated(conn, %{"offset" => offset}) do
@@ -32,7 +40,6 @@ defmodule SpotifyratingWeb.SongController do
       songs = fetch_and_sort_songs(conn, ratings)
       render(conn, "index.json", songs: songs, user_id: user.id)
     else
-      IO.inspect("please lord")
       SpotifyratingWeb.FallbackController.call(conn, {:error, :no_content})
     end
   end

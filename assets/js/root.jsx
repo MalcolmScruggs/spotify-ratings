@@ -25,10 +25,10 @@ class Root extends React.Component {
             <Router>
                 <div className="container">
                     <Route path="/" exact={true} render={() =>
-                        <SavedTracks socket={this.socket} api_url="/api/v1/saved_songs" />
+                        <SavedTracks socket={this.socket} api_url="/api/v1/song/my_saved" />
                     } />
                     <Route path="/my_song_ratings" exact={true} render={ () =>
-                        <SavedTracks socket={this.socket} api_url="/api/v1/my_song_ratings" />
+                        <SavedTracks socket={this.socket} api_url="/api/v1/song/my_ratings" />
                     } />
                 </div>
             </Router>

@@ -3,9 +3,9 @@ defmodule Spotifyrating.Repo.Migrations.CreateSongRatings do
 
   def change do
     create table(:song_ratings) do
-      add :user_id, :integer
-      add :song_id, :string
-      add :stars, :integer
+      add :user_id, :string, null: false
+      add :song_id, :string, null: false
+      add :stars, :integer, null: false
 
       timestamps()
     end

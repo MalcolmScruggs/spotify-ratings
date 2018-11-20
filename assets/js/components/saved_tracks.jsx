@@ -128,6 +128,7 @@ function Song(props) {
     let {album, artists, id, name} = song;
     let rating = Math.round(song.rating);
     //TODO distinguish between global averages and personal ratings (toggle?)
+    //TODO delete ratings by clicking on star value?
     return <tr>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{name}</td>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{artists}</td>

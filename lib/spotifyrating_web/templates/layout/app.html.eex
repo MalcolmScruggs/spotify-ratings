@@ -17,6 +17,7 @@
           <ul>
             <li>Spotify Ratings</li>
             <li><a href="/authorize">Authorize</a></li>
+            <li><a href="/logout">Logout</a></li>
           </ul>
         </nav>
       </section>

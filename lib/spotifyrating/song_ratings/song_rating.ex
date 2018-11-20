@@ -6,7 +6,7 @@ defmodule Spotifyrating.SongRatings.SongRating do
   schema "song_ratings" do
     field :song_id, :string
     field :stars, :integer
-    field :user_id, :integer
+    field :user_id, :string
 
     timestamps()
   end

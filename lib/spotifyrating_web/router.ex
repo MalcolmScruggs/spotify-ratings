@@ -25,6 +25,8 @@ defmodule SpotifyratingWeb.Router do
 
     get "/authorize", AuthorizationController, :authorize
     get "/authenticate", AuthenticationController, :authenticate
+    get "/logout", LogoutController, :logout
+    get "/refresh", AuthenticationController, :refresh
   end
 
 
@@ -32,7 +34,7 @@ defmodule SpotifyratingWeb.Router do
     pipe_through :api
 
     resources "/song_ratings", SongRatingController, except: [:new, :edit]
-    resources "/saved_songs", SavedSongsController, only: [:index]
-    resources "/my_song_ratings", MySongRatingController, only: [:index]
+    get "/song/my_saved", SongController, :my_saved
+    get "/song/my_ratings", SongController, :my_song_ratings
   end
 end

@@ -3,7 +3,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import StarRatingComponent from 'react-star-rating-component';
 
-export default class SavedTracks extends React.Component {
+export default class TrackList extends React.Component { //TODO rename
     constructor(props) {
         super(props);
 
@@ -45,7 +45,7 @@ export default class SavedTracks extends React.Component {
                     let channel = this.socket.channel("song:" + song.id);
                     channel.join()
                         .receive("ok", resp => {
-                            //console.log("Joined successfully", resp)
+                            //console.log("Joined successfully")
                         })
                         .receive("error", resp => { console.log("Unable to join", resp) });
                     channel.on("new:msg", this.gotRating.bind(this));
@@ -54,11 +54,11 @@ export default class SavedTracks extends React.Component {
                 });
                 this.setState({songs: songsMap});
             }).catch((error) => {
-                console.log(error);
                 if (error.response.status === 204) {
                     this.setState({max_load: true});
+                } else {
+                    console.log(error);
                 }
-                console.log(error.response.status);
             });
     };
 

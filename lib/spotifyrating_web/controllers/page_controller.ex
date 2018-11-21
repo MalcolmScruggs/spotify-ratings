@@ -2,8 +2,6 @@ defmodule SpotifyratingWeb.PageController do
   use SpotifyratingWeb, :controller
   plug SpotifyratingWeb.Plugs.Auth
 
-  alias Spotifyrating.SongRatings, as: SongRatings
-
   def index(conn, _params) do
     {:ok, user} = Spotify.Profile.me(conn)
     if Map.has_key?(user, "error") do

@@ -4,7 +4,7 @@ import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 
-import SavedTracks from './components/saved_tracks'
+import TrackList from './components/track_list'
 
 export default function root_init(node, store, socket) {
     ReactDOM.render(
@@ -18,6 +18,7 @@ class Root extends React.Component {
         super(props);
 
         this.socket = props.socket;
+        console.log(window.userId);
     }
 
     render() {
@@ -25,9 +26,10 @@ class Root extends React.Component {
             <Router>
                 <div>
                     <Header />
-                    <div className="container px-sm-4">
+                    {/*TODO make a home landing page*/}
+                    <div className="container px-sm-0">
                         <Route path="/" exact={true} render={() =>
-                            <SavedTracks
+                            <TrackList
                                 socket={this.socket}
                                 user_id={window.userId}
                                 api_url="/api/v1/song/my_saved"
@@ -35,7 +37,7 @@ class Root extends React.Component {
                             />
                         } />
                         <Route path="/my_song_ratings" exact={true} render={ () =>
-                            <SavedTracks
+                            <TrackList
                                 socket={this.socket}
                                 user_id={window.userId}
                                 api_url="/api/v1/song/my_ratings"
@@ -43,7 +45,7 @@ class Root extends React.Component {
                             />
                         } />
                         <Route path="/top_rated" exact={true} render={ () =>
-                            <SavedTracks
+                            <TrackList
                                 socket={this.socket}
                                 user_id={window.userId}
                                 api_url="/api/v1/song/top_rated"
@@ -60,6 +62,7 @@ class Root extends React.Component {
 function Header(props) {
     //logout
     //authenticate
+    //TODO make its own component
     return <nav className="navbar navbar-expand-md navbar-dark bg-dark">
         <a className="navbar-brand" href="#">Navbar</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

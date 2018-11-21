@@ -20,6 +20,7 @@ defmodule SpotifyratingWeb.Router do
     get "/", PageController, :index
     get "/my_song_ratings", PageController, :index
     get "/top_rated", PageController, :index
+    get "/search", PageController, :index
 
     get "/authorize", AuthorizationController, :authorize
     get "/authenticate", AuthenticationController, :authenticate
@@ -36,5 +37,6 @@ defmodule SpotifyratingWeb.Router do
     get "/song/my_ratings", SongController, :my_song_ratings
     get "/song/top_rated", SongController, :top_rated
     post "/playlist/create", PlaylistController, :create_playlist
+    get "/search", SearchController, :search
   end
 end

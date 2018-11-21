@@ -5,7 +5,7 @@ import { withAlert } from 'react-alert'
 
 import Song from './song';
 
-class TrackList extends React.Component { //TODO rename
+class TrackList extends React.Component {
     constructor(props) {
         super(props);
 
@@ -20,6 +20,8 @@ class TrackList extends React.Component { //TODO rename
         this.api_url = props.api_url;
         this.title = props.title;
         this.page_size = 50; //max allowed by spotify API
+        this.isSearch = props.isSearch || true;
+        this.query = props.query || null;
     }
 
     componentDidMount() {
@@ -32,9 +34,18 @@ class TrackList extends React.Component { //TODO rename
         });
     }
 
+    computeRequestParams() {
+        if (this.isSearch) {
+            return {offset: this.state.offset * this.page_size, query: this.query};
+        } else {
+            return {offset: this.state.offset * this.page_size}
+        }
+    }
+
     fetchSongsAndJoinChannels() {
+        let params = this.computeRequestParams();
         axios.get(this.api_url,
-                  {params:{offset: this.state.offset * this.page_size},
+                  {params: params,
                   validateStatus: function (status) {
                           return status >= 200 && status < 300 && status !== 204; // override default for 204 no more content resp.
                       },})
@@ -116,7 +127,7 @@ class TrackList extends React.Component { //TODO rename
             more = <div className="btn btn-primary mb-3  mr-3" onClick={() => {this.nextPage()}}>more</div>;
         }
         return <div>
-            <div className="mb-4"><h2>{this.title}</h2></div>
+            <div className="mb-4 mt-3"><h2>{this.title}</h2></div>
             <table className="table table-sm">
                 <colgroup>
                     <col style={{width: "50%"}}/>

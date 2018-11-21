@@ -13,10 +13,7 @@ defmodule SpotifyratingWeb.SongController do
       |> Enum.map(fn track ->
         Map.put(track, :rating, SongRatings.get_average_by_song_id(track.id))
       end)
-
-      {:ok, user_id} = Spotify.Profile.me(conn)
-      user_id = user_id.id
-      render(conn, "index.json", songs: saved_tracks, user_id: user_id)
+      render(conn, "index.json", songs: saved_tracks)
     else
       SpotifyratingWeb.FallbackController.call(conn, {:error, :no_content})
     end
@@ -27,18 +24,17 @@ defmodule SpotifyratingWeb.SongController do
     ratings = SongRatings.get_ratings_by_user_id(user.id, 50, offset)
     if(!Enum.empty?(ratings)) do
       songs = fetch_and_sort_songs(conn, ratings)
-      render(conn, "index.json", songs: songs, user_id: user.id)
+      render(conn, "index.json", songs: songs)
     else
       SpotifyratingWeb.FallbackController.call(conn, {:error, :no_content})
     end
   end
 
   def top_rated(conn, %{"offset" => offset}) do
-    {:ok, user} = Spotify.Profile.me(conn)
     ratings = SongRatings.get_top_ratings(50, offset)
     if (!Enum.empty?(ratings)) do
       songs = fetch_and_sort_songs(conn, ratings)
-      render(conn, "index.json", songs: songs, user_id: user.id)
+      render(conn, "index.json", songs: songs)
     else
       SpotifyratingWeb.FallbackController.call(conn, {:error, :no_content})
     end

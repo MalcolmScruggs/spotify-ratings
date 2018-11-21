@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
-import axios from 'axios';
-import { Provider } from 'react-redux';
 import { Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 
 
 import TrackList from './components/tracks/track_list'
+import Search from './components/search'
 
 export default function root_init(node, store, socket) {
     const options = {
@@ -28,7 +27,6 @@ class Root extends React.Component {
         super(props);
 
         this.socket = props.socket;
-        console.log(window.userId);
     }
 
     render() {
@@ -62,6 +60,9 @@ class Root extends React.Component {
                                 title="Global Top Rated Songs"
                             />
                         } />
+                        <Route path="/search" render={ () =>
+                            <Search socket={this.socket} />
+                        }/>
                     </div>
                 </div>
             </Router>
@@ -81,13 +82,16 @@ function Header(props) {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
                 <li className="nav-item active">
-                    <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
+                    <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="#">Features</a>
+                    <a className="nav-link" href="/top_rated">Top Rated</a>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="#">Pricing</a>
+                    <a className="nav-link" href="/my_song_ratings">My Ratings</a>
+                </li>
+                <li className="nav-item">
+                    <a className="nav-link" href="/search">Search</a>
                 </li>
                 <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

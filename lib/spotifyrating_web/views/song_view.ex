@@ -19,6 +19,7 @@ defmodule SpotifyratingWeb.SongView do
       name: song.name,
       artists: artists,
       album: album,
-      rating: song.rating}
+      rating: song.rating,
+      uri: song.uri}
   end
 end

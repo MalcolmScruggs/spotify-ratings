@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import StarRatingComponent from 'react-star-rating-component';
+
+import Song from './song';
 
 export default class TrackList extends React.Component { //TODO rename
     constructor(props) {
@@ -17,6 +18,7 @@ export default class TrackList extends React.Component { //TODO rename
         this.channels = new Map(); //song_id to channel
         this.api_url = props.api_url;
         this.title = props.title;
+        this.page_size = 50; //max allowed by spotify API
     }
 
     componentDidMount() {
@@ -31,7 +33,7 @@ export default class TrackList extends React.Component { //TODO rename
 
     fetchSongsAndJoinChannels() {
         axios.get(this.api_url,
-                  {params:{offset: this.state.offset * 50},
+                  {params:{offset: this.state.offset * this.page_size},
                   validateStatus: function (status) {
                           return status >= 200 && status < 300 && status !== 204; // default
                       },})
@@ -92,6 +94,19 @@ export default class TrackList extends React.Component { //TODO rename
         }, () => this.fetchSongsAndJoinChannels());
     }
 
+    createPlaylist() { //todo create ui for this
+        let songs = [];
+        this.state.songs.forEach((song, id) => {
+            songs.push(song.uri)
+        });
+        axios.post("/api/v1/playlist/create", {
+                title: this.title,
+                songs: songs
+            })
+            .then((resp) => console.log(resp))
+            .catch((error) => console.log(error))
+    }
+
     render() {
         let songs = [];
         this.state.songs.forEach((song, id) => {
@@ -122,32 +137,8 @@ export default class TrackList extends React.Component { //TODO rename
             </table>
             <div>
                 {more}
+                <div className="btn btn-primary ml-3 mb-3" onClick={() => {this.createPlaylist()}}>create playlist</div>
             </div>
             </div>
     }
-}
-
-function Song(props) {
-    let {song, root} = props;
-    let {album, artists, id, name} = song;
-    let rating = round(song.rating, 4);
-    return <tr>
-        <td className="text-truncate" style={{maxWidth: "1px"}}>{name}</td>
-        <td className="text-truncate" style={{maxWidth: "1px"}}>{artists}</td>
-        <td className="text-truncate" style={{maxWidth: "1px"}}>{album}</td>
-        <td data-toggle="tooltip" data-placement="top" title={rating || "unrated"}>
-            <StarRatingComponent
-                name={id}
-                starCount={5}
-                value={rating}
-                onStarClick={root.onStarClick.bind(root)}
-                starColor="#1DB954"
-            />
-        </td>
-    </tr>
-}
-
-//http://www.jacklmoore.com/notes/rounding-in-javascript/
-function round(value, decimals) {
-    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
 }

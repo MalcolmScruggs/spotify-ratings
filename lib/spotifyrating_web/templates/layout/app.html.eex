@@ -24,7 +24,7 @@
         </nav>
       </section>
     </header>
-    <main role="main">
+    <main role="main" style="overflow: hidden">
       <div class="row">
         <div class="col-12">
           <%= if get_flash(@conn, :info) do %>

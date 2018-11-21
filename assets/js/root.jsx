@@ -4,7 +4,7 @@ import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 
-import TrackList from './components/track_list'
+import TrackList from './components/tracks/track_list'
 
 export default function root_init(node, store, socket) {
     ReactDOM.render(

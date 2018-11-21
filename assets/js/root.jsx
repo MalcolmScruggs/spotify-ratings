@@ -3,14 +3,24 @@ import ReactDOM from 'react-dom';
 import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
 import axios from 'axios';
 import { Provider } from 'react-redux';
+import { Provider as AlertProvider } from 'react-alert'
+import AlertTemplate from 'react-alert-template-basic'
+
 
 import TrackList from './components/tracks/track_list'
 
 export default function root_init(node, store, socket) {
+    const options = {
+        position: 'bottom center',
+        timeout: 3000,
+        offset: '100px',
+        transition: 'scale'
+    };
+
     ReactDOM.render(
-        <Provider store={store}>
+        <AlertProvider template={AlertTemplate} {...options}>
             <Root socket={socket} />
-        </Provider>, node);
+        </AlertProvider>, node);
 }
 
 class Root extends React.Component {

@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
+import { withAlert } from 'react-alert'
 
 import Song from './song';
 
-export default class TrackList extends React.Component { //TODO rename
+class TrackList extends React.Component { //TODO rename
     constructor(props) {
         super(props);
 
@@ -35,20 +36,15 @@ export default class TrackList extends React.Component { //TODO rename
         axios.get(this.api_url,
                   {params:{offset: this.state.offset * this.page_size},
                   validateStatus: function (status) {
-                          return status >= 200 && status < 300 && status !== 204; // default
+                          return status >= 200 && status < 300 && status !== 204; // override default for 204 no more content resp.
                       },})
             .then((resp) => {
-                this.channels = new Map();
-
                 let data = resp.data;
                 let songs = data.data;
                 let songsMap = this.state.songs;
                 songs.forEach((song) => {
                     let channel = this.socket.channel("song:" + song.id);
                     channel.join()
-                        .receive("ok", resp => {
-                            //console.log("Joined successfully")
-                        })
                         .receive("error", resp => { console.log("Unable to join", resp) });
                     channel.on("new:msg", this.gotRating.bind(this));
                     this.channels.set(song.id, channel);
@@ -58,8 +54,10 @@ export default class TrackList extends React.Component { //TODO rename
             }).catch((error) => {
                 if (error.response.status === 204) {
                     this.setState({max_load: true});
+                    this.props.alert.info("All songs loaded")
                 } else {
                     console.log(error);
+                    this.props.alert.error("Failed to load songs: " + error.response.status)
                 }
             });
     };
@@ -82,7 +80,8 @@ export default class TrackList extends React.Component { //TODO rename
 
         let channel = this.channels.get(name);
         channel.push("rate", {song_rating: data})
-            .receive("ok", this.gotRating.bind(this));
+            .receive("ok", this.gotRating.bind(this))
+            .receive("error", () => { this.props.alert.error("Failed to create rating")});
     }
 
     nextPage() {
@@ -94,7 +93,7 @@ export default class TrackList extends React.Component { //TODO rename
         }, () => this.fetchSongsAndJoinChannels());
     }
 
-    createPlaylist() { //todo create ui for this
+    createPlaylist() {
         let songs = [];
         this.state.songs.forEach((song, id) => {
             songs.push(song.uri)
@@ -103,8 +102,8 @@ export default class TrackList extends React.Component { //TODO rename
                 title: this.title,
                 songs: songs
             })
-            .then((resp) => console.log(resp))
-            .catch((error) => console.log(error))
+            .then((resp) => this.props.alert.success("Playlist created"))
+            .catch((error) => this.props.alert.error("Failed to create playlist"))
     }
 
     render() {
@@ -114,7 +113,7 @@ export default class TrackList extends React.Component { //TODO rename
         });
         let more = null;
         if (!this.state.max_load) {
-            more = <div className="btn btn-primary mb-3" onClick={() => {this.nextPage()}}>more</div>;
+            more = <div className="btn btn-primary mb-3  mr-3" onClick={() => {this.nextPage()}}>more</div>;
         }
         return <div>
             <div className="mb-4"><h2>{this.title}</h2></div>
@@ -137,8 +136,10 @@ export default class TrackList extends React.Component { //TODO rename
             </table>
             <div>
                 {more}
-                <div className="btn btn-primary ml-3 mb-3" onClick={() => {this.createPlaylist()}}>create playlist</div>
+                <div className="btn btn-primary mb-3" onClick={() => {this.createPlaylist()}}>create playlist</div>
             </div>
             </div>
     }
 }
+
+export default withAlert(TrackList)

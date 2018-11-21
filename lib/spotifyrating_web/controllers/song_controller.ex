@@ -8,9 +8,9 @@ defmodule SpotifyratingWeb.SongController do
 
   def my_saved(conn, %{"offset" => offset}) do
     {:ok, saved_tracks } = Spotify.Library.get_saved_tracks(conn, limit: 50, offset: offset)
-    if (saved_tracks) do
+    if (saved_tracks && !Enum.empty?(saved_tracks.items)) do
       saved_tracks = saved_tracks.items
-                     |> Enum.map(fn track ->
+      |> Enum.map(fn track ->
         Map.put(track, :rating, SongRatings.get_average_by_song_id(track.id))
       end)
 

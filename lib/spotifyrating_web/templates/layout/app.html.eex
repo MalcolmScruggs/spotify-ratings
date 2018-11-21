@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script>
         window.userToken = "<%= @user_token %>";
-        window.userId = " <%= @user_id %>";
+        window.userId = "<%= @user_id %>";
     </script>
   </head>
   <body>

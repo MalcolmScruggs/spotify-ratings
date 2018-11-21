@@ -15,7 +15,11 @@ class TrackList extends React.Component {
             offset: 0,
             max_load:  false
         };
+
         this.socket = props.socket;
+        this.CancelToken = axios.CancelToken; //for canceling axios request
+        this.source = this.CancelToken.source(); //for canceling axios request
+
         this.channels = new Map(); //song_id to channel
         this.api_url = props.api_url;
         this.title = props.title;
@@ -29,6 +33,7 @@ class TrackList extends React.Component {
     }
 
     componentWillUnmount() {
+        this.source.cancel();
         this.channels.forEach((channel) => {
             channel.leave(); //leave any previously joined channels
         });
@@ -46,6 +51,7 @@ class TrackList extends React.Component {
         let params = this.computeRequestParams();
         axios.get(this.api_url,
                   {params: params,
+                  cancelToken: this.source.token,
                   validateStatus: function (status) {
                           return status >= 200 && status < 300 && status !== 204; // override default for 204 no more content resp.
                       },})

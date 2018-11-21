@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Link, NavLink, BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 
@@ -32,10 +32,10 @@ class Root extends React.Component {
     render() {
         return <div>
             <Router>
-                <div>
+                <div className="container px-sm-0">
                     <Header />
                     {/*TODO make a home landing page*/}
-                    <div className="container px-sm-0">
+                    <div>
                         <Route path="/" exact={true} render={() =>
                             <TrackList
                                 socket={this.socket}
@@ -71,37 +71,26 @@ class Root extends React.Component {
 }
 
 function Header(props) {
-    //logout
-    //authenticate
+    //TODO logout
     //TODO make its own component
-    return <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-        <a className="navbar-brand" href="#">Navbar</a>
+    return <nav className="navbar navbar-expand-md navbar-dark p-0 pb-3 pt-1">
+        <a className="navbar-brand" href="#">Spotify Ratings</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
-                <li className="nav-item active">
-                    <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
+                <li className="nav-item">
+                    <NavLink exact to="/" className="nav-link" activeClassName="active">Home</NavLink>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/top_rated">Top Rated</a>
+                    <NavLink exact to="/top_rated" className="nav-link" activeClassName="active">Top Rated</NavLink>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/my_song_ratings">My Ratings</a>
+                    <NavLink exact to="/my_song_ratings" className="nav-link" activeClassName="active">My Ratings</NavLink>
                 </li>
                 <li className="nav-item">
-                    <a className="nav-link" href="/search">Search</a>
-                </li>
-                <li className="nav-item dropdown">
-                    <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown link
-                    </a>
-                    <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a className="dropdown-item" href="#">Action</a>
-                        <a className="dropdown-item" href="#">Another action</a>
-                        <a className="dropdown-item" href="#">Something else here</a>
-                    </div>
+                    <NavLink exact to="/search" className="nav-link" activeClassName="active">Search</NavLink>
                 </li>
             </ul>
         </div>

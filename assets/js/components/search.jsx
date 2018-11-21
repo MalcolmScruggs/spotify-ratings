@@ -36,11 +36,14 @@ export default class Search extends React.Component {
             />
         } else {
             return <div>
-                <label>Search</label>
-                <input type="text" value={this.state.query} placeholder="search"
-                       onChange={this.changeQuery}
-                       onKeyPress={(e) => {e.key === 'Enter' ? this.onSearch() : null}}/>
-                <div className="btn btn-primary" onClick={this.onSearch}>search</div>
+                <form className="form-inline" onSubmit={this.onSearch}>
+                    <input type="text" className="form-control mr-2"
+                           value={this.state.query}
+                           placeholder="search"
+                           onChange={this.changeQuery}
+                           />
+                    <button type="submit" className="btn btn-primary" onClick={this.onSearch}>search</button>
+                </form>
             </div>
         }
     }

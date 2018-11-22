@@ -4,5 +4,8 @@
     <div class="col-12 text-center h4 mb-3">Rate songs, view top rated songs, and create playlists.</div>
     <div class="col-12 text-center mb-2">Connect with Spotify to continue</div>
     <a style="margin: auto" href="/authorize"><div class="btn btn-primary">continue</div></a>
+    <div class="col-12 text-center my-2">
+      <a class="text-muted" href="https://github.com/MalcolmScruggs/spotify-ratings">view on github</a>
+    </div>
   </div>
 </div>

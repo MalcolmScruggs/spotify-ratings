@@ -26,6 +26,7 @@ class TrackList extends React.Component {
         this.page_size = 50; //max allowed by spotify API
         this.isSearch = props.isSearch || true;
         this.query = props.query || null;
+        this.isPrivate = props.isPrivate || false;
     }
 
     componentDidMount() {
@@ -60,7 +61,7 @@ class TrackList extends React.Component {
                 let songs = data.data;
                 let songsMap = this.state.songs;
                 songs.forEach((song) => {
-                    let channel = this.socket.channel("song:" + song.id);
+                    let channel = this.socket.channel(`song:${song.id}${this.isPrivate ? this.state.user_id : ""}`);
                     channel.join()
                         .receive("error", resp => { console.log("Unable to join", resp) });
                     channel.on("new:msg", this.gotRating.bind(this));
@@ -134,7 +135,7 @@ class TrackList extends React.Component {
         }
         return <div>
             <div className="mb-4 mt-3"><h2>{this.title}</h2></div>
-            <table className="table table-sm">
+            <table className="table table-sm mb-0">
                 <colgroup>
                     <col style={{width: "50%"}}/>
                     <col style={{width: "30%"}} />
@@ -148,14 +149,17 @@ class TrackList extends React.Component {
                     <th className="text-uppercase" style={{minWidth: "90px"}}>Rating</th>
                 </tr></thead>
                 <tbody>
-                    {songs}
+                {songs}
                 </tbody>
             </table>
+            <div className="text-muted text-right">
+                Ratings displayed are {this.isPrivate ? "personal" : "public averages"}
+            </div>
             <div>
                 {more}
                 <div className="btn btn-primary mb-3" onClick={() => {this.createPlaylist()}}>create playlist</div>
             </div>
-            </div>
+        </div>
     }
 }
 

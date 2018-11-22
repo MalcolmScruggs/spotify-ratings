@@ -17,7 +17,14 @@ defmodule SpotifyratingWeb.PlaylistController do
     {:ok, user} = Spotify.Profile.me(conn)
     body = Poison.encode!(%{name: title, public: true})
     {:ok, playlist} = Spotify.Playlist.create_playlist(conn, user.id, body)
-    track_body = Poison.encode!(%{uris: songs})
-    Spotify.Playlist.add_tracks(conn, user.id, playlist.id, track_body, [])
+    x = Enum.chunk_every(songs, 100) #max limit of 100 per request
+    |> Enum.map(fn s -> add_to_playlist(conn, user, playlist, s) end)
+    |> List.last()
+    IO.inspect(x)
+  end
+
+  defp add_to_playlist(conn, user, playlist, s) do
+    body = Poison.encode!(%{uris: s})
+    {:ok, resp} = Spotify.Playlist.add_tracks(conn, user.id, playlist.id, body, [])
   end
 end

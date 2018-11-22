@@ -4,12 +4,13 @@ import StarRatingComponent from 'react-star-rating-component';
 export default function Song(props) {
     let {song, root} = props;
     let {album, artists, id, name} = song;
-    let rating = round(song.rating, 4);
+    let exactRating = round(song.rating, 4);
+    let rating = Math.round(song.rating);
     return <tr>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{name}</td>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{artists}</td>
         <td className="text-truncate" style={{maxWidth: "1px"}}>{album}</td>
-        <td data-toggle="tooltip" data-placement="top" title={rating || "unrated"}>
+        <td data-toggle="tooltip" data-placement="top" title={exactRating || "unrated"}>
             <StarRatingComponent
                 name={id}
                 starCount={5}

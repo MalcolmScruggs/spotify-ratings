@@ -50,6 +50,7 @@ class Root extends React.Component {
                                 user_id={window.userId}
                                 api_url="/api/v1/song/my_ratings"
                                 title="Rated Songs"
+                                isPrivate={true}
                             />
                         } />
                         <Route path="/top_rated" exact={true} render={ () =>

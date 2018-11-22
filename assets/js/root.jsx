@@ -36,7 +36,7 @@ class Root extends React.Component {
                     <Header />
                     {/*TODO make a home landing page*/}
                     <div>
-                        <Route path="/" exact={true} render={() =>
+                        <Route path="/saved" exact={true} render={() =>
                             <TrackList
                                 socket={this.socket}
                                 user_id={window.userId}
@@ -82,10 +82,10 @@ function Header(props) {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
                 <li className="nav-item">
-                    <NavLink exact to="/" className="nav-link" activeClassName="active">Home</NavLink>
+                    <NavLink exact to="/top_rated" className="nav-link" activeClassName="active">Top Rated</NavLink>
                 </li>
                 <li className="nav-item">
-                    <NavLink exact to="/top_rated" className="nav-link" activeClassName="active">Top Rated</NavLink>
+                    <NavLink exact to="/saved" className="nav-link" activeClassName="active">Saved</NavLink>
                 </li>
                 <li className="nav-item">
                     <NavLink exact to="/my_song_ratings" className="nav-link" activeClassName="active">My Ratings</NavLink>

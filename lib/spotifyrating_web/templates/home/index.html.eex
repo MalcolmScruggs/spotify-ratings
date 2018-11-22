@@ -1,0 +1,8 @@
+<div class="container px-sm-0">
+  <div class="row">
+    <div class="col-12 text-center display-2 my-4">Spotify Ratings</div>
+    <div class="col-12 text-center h4 mb-3">Rate songs, view top rated songs, and create playlists.</div>
+    <div class="col-12 text-center mb-2">Connect with Spotify to continue</div>
+    <a style="margin: auto" href="/authorize"><div class="btn btn-primary">continue</div></a>
+  </div>
+</div>

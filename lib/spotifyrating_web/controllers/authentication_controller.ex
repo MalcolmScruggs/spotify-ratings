@@ -4,7 +4,7 @@ defmodule SpotifyratingWeb.AuthenticationController do
   def authenticate(conn, params) do
     case Spotify.Authentication.authenticate(conn, params) do
       {:ok, conn } ->
-        redirect conn, to: "/"
+        redirect conn, to: "/top_rated"
       {:error, _reason, conn} -> redirect conn, to: "/error"
     end
   end
@@ -14,7 +14,7 @@ defmodule SpotifyratingWeb.AuthenticationController do
       {:ok, conn } ->
         IO.inspect(conn)
         #TODO redirects when token expires
-        redirect conn, to: "/"
+        redirect conn, to: "/top_rated"
       {:unauthorized, _reason, conn} -> redirect conn, to: "/authorize"
       end
     end

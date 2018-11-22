@@ -17,7 +17,8 @@ defmodule SpotifyratingWeb.Router do
   scope "/", SpotifyratingWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", HomeController, :index
+    get "/saved", PageController, :index
     get "/my_song_ratings", PageController, :index
     get "/top_rated", PageController, :index
     get "/search", PageController, :index

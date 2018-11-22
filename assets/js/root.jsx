@@ -34,7 +34,6 @@ class Root extends React.Component {
             <Router>
                 <div className="container px-sm-0">
                     <Header />
-                    {/*TODO make a home landing page*/}
                     <div>
                         <Route path="/saved" exact={true} render={() =>
                             <TrackList
@@ -72,8 +71,6 @@ class Root extends React.Component {
 }
 
 function Header(props) {
-    //TODO logout
-    //TODO make its own component
     return <nav className="navbar navbar-expand-md navbar-dark p-0 pb-3 pt-1">
         <a className="navbar-brand" href="#">Spotify Ratings</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

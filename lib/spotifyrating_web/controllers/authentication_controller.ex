@@ -13,7 +13,6 @@ defmodule SpotifyratingWeb.AuthenticationController do
     case Spotify.Authentication.refresh(conn) do
       {:ok, conn } ->
         IO.inspect(conn)
-        #TODO redirects when token expires
         redirect conn, to: "/top_rated"
       {:unauthorized, _reason, conn} -> redirect conn, to: "/authorize"
       end

@@ -1,6 +1,5 @@
 defmodule SpotifyratingWeb.SongRatingController do
   use SpotifyratingWeb, :controller
-  #TODO plugs and authorization
 
   alias Spotifyrating.SongRatings
   alias Spotifyrating.SongRatings.SongRating

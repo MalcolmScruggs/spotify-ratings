@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { withAlert } from 'react-alert'
 
 import Song from './song';
+import PlaylistCreate from '../playlist_create'
 
 class TrackList extends React.Component {
     constructor(props) {
@@ -27,6 +28,8 @@ class TrackList extends React.Component {
         this.isSearch = props.isSearch || true;
         this.query = props.query || null;
         this.isPrivate = props.isPrivate || false;
+
+        this.createPlaylist = this.createPlaylist.bind(this);
     }
 
     componentDidMount() {
@@ -75,7 +78,7 @@ class TrackList extends React.Component {
                     this.props.alert.info("All songs loaded")
                 } else {
                     console.log(error);
-                    this.props.alert.error("Failed to load songs: " + error.response.status)
+                    this.props.alert.error("Failed to load songs")
                 }
             });
     };
@@ -111,13 +114,19 @@ class TrackList extends React.Component {
         }, () => this.fetchSongsAndJoinChannels());
     }
 
-    createPlaylist() {
+    createPlaylist(title, minRating) {
         let songs = [];
         this.state.songs.forEach((song, id) => {
-            songs.push(song.uri)
+            if(song.rating && parseFloat(song.rating) >= minRating) {
+                songs.push(song.uri);
+            }
         });
+        if (songs.length === 0) {
+            this.props.alert.info("No songs meet criteria.");
+            return;
+        }
         axios.post("/api/v1/playlist/create", {
-                title: this.title,
+                title: title,
                 songs: songs
             })
             .then((resp) => this.props.alert.success("Playlist created"))
@@ -157,7 +166,7 @@ class TrackList extends React.Component {
             </div>
             <div>
                 {more}
-                <div className="btn btn-primary mb-3" onClick={() => {this.createPlaylist()}}>create playlist</div>
+                <PlaylistCreate create={this.createPlaylist} titlePlacehold={this.title} />
             </div>
         </div>
     }

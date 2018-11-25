@@ -1,5 +1,11 @@
 # Spotifyrating
+A web-app to add ratings to songs from Spotify. 
+View saved songs, rated songs, search, and view top rated songs across users. 
+Ratings update live via channels. 
+Built using Elixir/Phoenix
 
+
+## Running
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`

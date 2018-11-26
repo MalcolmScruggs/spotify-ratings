@@ -11,6 +11,5 @@ defmodule Spotifyrating.Repo.Migrations.CreateSongRatings do
     end
 
     create index(:song_ratings, [:user_id, :song_id], unique: true)
-#    create constraint(:song_ratings, :song_rating_in_range, check: "stars >= 1 && ")
   end
 end

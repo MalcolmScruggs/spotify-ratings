@@ -1,8 +1,8 @@
-# Spotifyrating
+# Spotify Ratings
 A web-app to add ratings to songs from Spotify. 
 View and create playlists from saved songs, rated songs, search, view top rated songs across all users. 
 Ratings update live via channels. 
-Built using Elixir/Phoenix
+Built using Elixir/Phoenix.
 
 
 ## Running

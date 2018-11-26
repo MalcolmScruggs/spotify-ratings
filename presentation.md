@@ -99,4 +99,16 @@ defmodule SpotifyratingWeb.AuthenticationController do
 end
 ```
 
+#####Libraries used
+Javascript
+- "axios": "^0.18.0",
+- "bootstrap": "^4.1.3",
+- "prop-types": "^15.6.2",
+- "react-router-dom": "^4.3.1",
+- "react-alert": "^4.0.4",
+
+Elixir
+- {:spotify_ex, "~> 2.0.9"}
+
+
 #Questions?
